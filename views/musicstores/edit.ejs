@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Music Store</title>
+</head>
+
+<body>
+    <h1>Edit Music Store</h1>
+    <form action="/musicstores/<%=store._id%>?_method=PUT" method="POST">
+        <div>
+            <label for="title">Title</label>
+            <input type="text" id="title" name="store[title]" value="<%=store.title%> ">
+        </div>
+        <div>
+            <label for="title">Location</label>
+            <input type="text" id="location" name="store[location]" value="<%=store.location%> ">
+        </div>
+        <button>Update Store</button>
+    </form>
+    <a href="/musicstores/<%=store._id %> ">Back to Music Stores</a>
+</body>
+
+</html>

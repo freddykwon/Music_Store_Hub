@@ -7,5 +7,5 @@ const musicstoresSchema = new Schema({
     location: String
 });
 
-module.exports = mongoose.model('Stores', musicstoresSchema);
+module.exports = mongoose.model('Store', musicstoresSchema);
 

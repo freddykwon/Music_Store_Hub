@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Music Store</title>
+</head>
+
+<body>
+    <form action="/musicstores" method="POST">
+        <div>
+            <label for="title">Title</label>
+            <input type="text" name="store[title]" id="title">
+        </div>
+        <div>
+            <label for="title">Location</label>
+            <input type="text" name="store[location]" id="location">
+        </div>
+        <button>Add Store</button>
+    </form>
+    <div>
+        <a href="/musicstores">All Music Stores</a>
+    </div>
+</body>
+
+</html>
