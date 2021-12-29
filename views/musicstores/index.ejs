@@ -1,27 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Stores</title>
-</head>
-
-<body>
+<% layout('/layouts/boilerplate')%>
     <div>
         <a href="/musicstores/new">Add New Store</a>
     </div>
     <h1>All Music Stores</h1>
-    <ul>
-        <% for (let store of musicstores) {%>
-            <li>
-                <a class="btn" href="/musicstores/<%= store._id%>">
-                    <%=store.title %>
-                </a>
-            </li>
-            <% } %>
-    </ul>
-</body>
-
-</html>
+    <% for (let store of musicstores) {%>
+        <div class="card mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <img class="img-fluid" src="<%= store.image%>" alt="<%= store.title%>">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%=store.title%>
+                        </h5>
+                        <p class="card-text">
+                            <%= store.description%>
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <%= store.location%>
+                            </small>
+                        </p>
+                        <a class="btn btn-primary" href="/musicstores/<%=store._id%>">View <%=store.title%></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>

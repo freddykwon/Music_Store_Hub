@@ -1,35 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-
-<body>
-    <h1>
-        <%= store.title %>
-    </h1>
-    <h2>
-        <%= store.location %>
-    </h2>
-    <p>
-    <form action="/musicstores/<%=store._id%>?_method=DELETE" method="POST">
-        <button>Delete Store</button>
-    </form>
-    </p>
-    <p>
-        <a href="/musicstores/<%=store._id%>/edit">
-            <button>Edit</button>
-        </a>
-    </p>
-    <footer>
-        <a href="/musicstores">
-            <button>All Music Stores</button>
-        </a>
-    </footer>
-</body>
-
-</html>
+<% layout('/layouts/boilerplate')%>
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card mb-3" style="width: 18rem;">
+                <img src="<%=store.image%>" class="card-img-top" alt="Image of <%=store.title%>">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= store.title %>
+                    </h5>
+                    <p class="card-text">
+                        <%= store.description %>
+                    </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-muted">
+                        <%= store.location %>
+                    </li>
+                </ul>
+                <div class="card-body">
+                    <a class="card-link btn btn-warning" href="/musicstores/<%=store._id%>/edit">Edit</a>
+                    <form class="btn btn-danger" action="/musicstores/<%=store._id%>?_method=DELETE" method="POST">
+                        Delete Store
+                    </form>
+                </div>
+                <div class="card-footer text-muted">2 days ago</div>
+            </div>
+        </div>
+    </div>
