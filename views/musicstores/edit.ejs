@@ -2,24 +2,30 @@
     <div class="row">
         <h1 class="text-center">Edit Store</h1>
         <div class="col-6 offset-3">
-            <form action="/musicstores/<%=store._id%>?_method=PUT" method="POST">
+            <form action="/musicstores/<%=store._id%>?_method=PUT" method="POST" novalidate class="validated-form">
                 <div class="mb-3">
                     <label class="form-label" for="title">Title</label>
-                    <input class="form-control" type="text" name="store[title]" id="title" value="<%=store.title%>">
+                    <input class="form-control" type="text" name="store[title]" id="title" value="<%=store.title%>"
+                        required>
+                    <div class="valid-feedback">Looks good!</div>
                 </div>
                 <div class=" mb-3">
                     <label class="form-label" for="location">Location</label>
                     <input class="form-control" type="text" name="store[location]" id="location"
-                        value="<%=store.location%> ">
+                        value="<%=store.location%> " required>
+                    <div class="valid-feedback">Looks good!</div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="image">Image URL</label>
-                    <input class="form-control" type="text" name="store[image]" id="image" value="<%=store.image%> ">
+                    <input class="form-control" type="text" name="store[image]" id="image" value="<%=store.image%> "
+                        required>
+                    <div class="valid-feedback">Looks good!</div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="description">Description</label>
-                    <textarea class="form-control" type="text" name="store[description]"
+                    <textarea class="form-control" type="text" name="store[description]" required
                         id="description"><%=store.description%></textarea>
+                    <div class="valid-feedback">Looks good!</div>
                 </div>
                 <div class="mb-3">
                     <button class="btn btn-info">Update Store</button>

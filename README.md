@@ -2,4 +2,4 @@
 Building first application that serves as a music store directory/locater. Using Javascript, Express js (+ejs), MongoDB and Mongoose
 
 ## Progress 
-Basic CRUD funcationality of the application established. First phase of styling also completed. 
+Added validation to CRUD functionalities in the app and "New Store" form added. Currently working through adding reviews section (created another model 'review.js')
