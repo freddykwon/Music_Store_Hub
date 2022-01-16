@@ -2,16 +2,23 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
-const { storeSchema } = require('./schemas.js');
-const catchAsync = require('./utils/catchAsync');
-const ExpressError = require('./utils/ExpressError');
+const session = require('express-session');
+const flash = require('connect-flash');
 const methodOverride = require('method-override');
-const Store = require('./models/stores')
-const Review = require('./models/review');
+const ExpressError = require('./utils/ExpressError');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user')
+
+
+
+const userRoutes = require('./routes/users')
+const musicstoreRoutes = require('./routes/musicstores');
+const reviewRoutes = require('./routes/reviews')
 
 mongoose.connect('mongodb://localhost:27017/music-stores', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
 })
 
 const db = mongoose.connection;
@@ -29,66 +36,49 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'));
 
-const validateStore = (req, res, next) => {
-    const { error } = storeSchema.validate(req.body);
-    if (error) {
-        const msg = error.details.map(el => el.message).join(',')
-        throw new ExpressError(msg, 400);
-    } else {
-        next();
+
+const sessionConfig = {
+    secret: 'thisshouldbeabettersecret!',
+    resave: false,
+    saveUnitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
     }
 }
+app.use(session(sessionConfig))
+app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req, res, next) => {
+    console.log(req.session)
+    res.locals.currentUser = req.user;
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
+    next();
+})
+
+app.get('/fakeUser', async (req, res) => {
+    const user = new User({ email: 'freddddy@gmail.com', username: 'freddyk17' })
+    const newUser = await User.register(user, 'chicken');
+    res.send(newUser);
+})
+
+app.use('/', userRoutes)
+app.use('/musicstores', musicstoreRoutes)
+app.use('/musicstores/:id/reviews', reviewRoutes);
+app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', (req, res) => {
     res.render('home')
 });
-
-app.get('/musicstores', catchAsync(async (req, res) => {
-    const musicstores = await Store.find({});
-    res.render('musicstores/index', { musicstores })
-}));
-
-app.get('/musicstores/new', (req, res) => {
-    res.render('musicstores/new');
-})
-
-app.post('/musicstores', validateStore, catchAsync(async (req, res, next) => {
-    const store = new Store(req.body.store)
-    console.log(store)
-    await store.save();
-    res.redirect(`/musicstores/${store._id}`)
-}))
-
-app.get('/musicstores/:id', catchAsync(async (req, res) => {
-    const store = await Store.findById(req.params.id)
-    res.render('musicstores/show', { store });
-}));
-
-app.get('/musicstores/:id/edit', catchAsync(async (req, res) => {
-    const store = await Store.findById(req.params.id)
-    res.render('musicstores/edit', { store });
-}))
-
-app.put('/musicstores/:id', validateStore, catchAsync(async (req, res) => {
-    const { id } = req.params;
-    const store = await Store.findByIdAndUpdate(id, { ...req.body.store })
-    res.redirect(`/musicstores/${store._id}`)
-}));
-
-app.delete('/musicstores/:id', catchAsync(async (req, res) => {
-    const { id } = req.params;
-    await Store.findByIdAndDelete(id);
-    res.redirect('/musicstores');
-}));
-
-app.post('/musicstores/:id/reviews', catchAsync(async (req, res) => {
-    const store = await Store.findById(req.params.id);
-    const review = new Review(req.body.review);
-    store.reviews.push(review);
-    await review.save()
-    await store.save()
-    res.redirect(`/musicstores/${store._id}`);
-}));
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404));
