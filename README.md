@@ -5,6 +5,6 @@ Building first application that serves as a music store directory/locater. Using
 An online database of music stores and equipment repair shops for musicians touring around Canada in one place. Open source. Users can add stores, review shops. Admin can delete stores, reviews, etc. 
 
 ## Progress 
-Added authentication including registering a new user to database, logging in and logging out using passport.js. Use appropriate flash messaging to highlight authentication status. 
+Refactored the route files using controllers to clean up and be easily read and improved rating system with starability.css. Needs improvement on UI still.
 
-- Currently includes form for Title, Location, Image URL, Description. Should include contact information (phone #, email, store manager??/main contact)
+** Currently includes form for Title, Location, Image URL, Description. Should include contact information (phone #, email, store manager??/main contact). Maps feature pending**

@@ -18,7 +18,7 @@ const reviewRoutes = require('./routes/reviews')
 
 mongoose.connect('mongodb://localhost:27017/music-stores', {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
+    useUnifiedTopology: true
 })
 
 const db = mongoose.connection;
@@ -35,6 +35,7 @@ app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.urlencoded({ extended: true }))
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, 'public')))
 
 
 const sessionConfig = {
@@ -65,16 +66,11 @@ app.use((req, res, next) => {
     next();
 })
 
-app.get('/fakeUser', async (req, res) => {
-    const user = new User({ email: 'freddddy@gmail.com', username: 'freddyk17' })
-    const newUser = await User.register(user, 'chicken');
-    res.send(newUser);
-})
 
 app.use('/', userRoutes)
 app.use('/musicstores', musicstoreRoutes)
 app.use('/musicstores/:id/reviews', reviewRoutes);
-app.use(express.static(path.join(__dirname, 'public')))
+
 
 app.get('/', (req, res) => {
     res.render('home')
