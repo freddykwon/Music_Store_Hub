@@ -1,4 +1,5 @@
 const Store = require('../models/stores')
+const { cloudinary } = require("../cloudinary")
 
 module.exports.index = async (req, res) => {
     const musicstores = await Store.find({});
@@ -10,9 +11,13 @@ module.exports.renderNewForm = (req, res) => {
 }
 
 module.exports.createStore = async (req, res, next) => {
-    req.flash('success', "Successfully added a new store!")
+
     const store = new Store(req.body.store)
+    store.author = req.user._id;
+    store.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
     await store.save();
+    console.log(store)
+    req.flash('success', "Successfully added a new store!")
     res.redirect(`/musicstores/${store._id}`)
 }
 
@@ -42,7 +47,17 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateStore = async (req, res) => {
     const { id } = req.params;
+    console.log(req.body)
     const store = await Store.findByIdAndUpdate(id, { ...req.body.store });
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }))
+    store.images.push(...imgs);
+    if (req.body.deleteImages) {
+        for (let filename of req.body.deleteImages) {
+            await cloudinary.uploader.destroy(filename);
+        }
+        await store.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+    }
+    await store.save()
     req.flash('success', 'Successfully updated store!');
     res.redirect(`/musicstores/${store._id}`)
 }
