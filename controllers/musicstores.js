@@ -1,5 +1,9 @@
 const Store = require('../models/stores')
 const { cloudinary } = require("../cloudinary")
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding')
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding({ accessToken: mapBoxToken })
+
 
 module.exports.index = async (req, res) => {
     const musicstores = await Store.find({});
@@ -11,8 +15,12 @@ module.exports.renderNewForm = (req, res) => {
 }
 
 module.exports.createStore = async (req, res, next) => {
-
-    const store = new Store(req.body.store)
+    const geoData = await geocoder.forwardGeocode({
+        query: req.body.store.location,
+        limit: 1
+    }).send();
+    const store = new Store(req.body.store);
+    store.geometry = geoData.body.features[0].geometry;
     store.author = req.user._id;
     store.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
     await store.save();
