@@ -6,9 +6,11 @@
                 <h2 class="alert-heading">
                     <%=err.message%>
                 </h2>
-                <p>
-                    <%=err.stack%>
-                </p>
+                <% if (process.env.NODE_ENV !=="production" ) { %>
+                    <p>
+                        <%=err.stack%>
+                    </p>
+                    <% } %>
             </div>
         </div>
     </div>
