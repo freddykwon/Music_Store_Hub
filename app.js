@@ -24,8 +24,6 @@ const userRoutes = require('./routes/users')
 const musicstoreRoutes = require('./routes/musicstores');
 const reviewRoutes = require('./routes/reviews')
 
-process.env.DB_URL
-
 const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/music-stores'
 
 
@@ -160,8 +158,9 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err });
 })
 
-app.listen(3000, () => {
-    console.log('Serving on port 3000')
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Serving on port ${port}`)
 })
 
 
